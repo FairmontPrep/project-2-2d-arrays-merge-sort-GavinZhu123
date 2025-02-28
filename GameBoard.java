@@ -23,7 +23,7 @@ public class GameBoard extends JFrame {
         }
 
         loadPieces();
-        sortPieces();
+        mergeSort(piecesArray, 0, piecesArray.size() - 1);
         populateBoard();
     }
 
@@ -56,8 +56,47 @@ public class GameBoard extends JFrame {
         piecesArray.add(new ArrayList<>(Arrays.asList("W_King.png", "60")));
     }
 
-    private void sortPieces() {
-        // Optional: Sort by image name or other criteria if needed
+    private void mergeSort(ArrayList<ArrayList<String>> list, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(list, left, mid);
+            mergeSort(list, mid + 1, right);
+            merge(list, left, mid, right);
+        }
+    }
+
+    private void merge(ArrayList<ArrayList<String>> list, int left, int mid, int right) {
+        ArrayList<ArrayList<String>> temp = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            temp.add(new ArrayList<>(list.get(i)));
+        }
+
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+
+        while (i <= mid && j <= right) {
+            if (temp.get(i - left).get(0).compareTo(temp.get(j - left).get(0)) <= 0) {
+                list.set(k, temp.get(i - left));
+                i++;
+            } else {
+                list.set(k, temp.get(j - left));
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= mid) {
+            list.set(k, temp.get(i - left));
+            i++;
+            k++;
+        }
+
+        while (j <= right) {
+            list.set(k, temp.get(j - left));
+            j++;
+            k++;
+        }
     }
 
     private void populateBoard() {
